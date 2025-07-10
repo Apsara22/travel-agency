@@ -1,84 +1,121 @@
 import bcrypt from 'bcryptjs';
-import User from "../models/user_model.js"
-import jwt from 'jsonwebtoken'
-export const Register = async (req, res) => {
+import User from "../models/user_model.js";
+import jwt from 'jsonwebtoken';
+import axios from 'axios';
+import { setTimeout } from 'timers/promises';
+
+// Helper function to geocode Nepali addresses
+async function geocodeNepaliAddress(address) {
     try {
-        const { name, address, email, password } = req.body
-
-        const checkRegisrationStatus = await User.findOne({ email })
-
-        if (checkRegisrationStatus) {
-            return res.status(409).json({
-                status: false,
-                message: "User Already Have Register"
-            })
-
+        // Add delay to respect OpenStreetMap's rate limit (1 request per second)
+        await setTimeout(1000);
+        
+        const response = await axios.get(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}, Nepal&format=json&countrycodes=np`
+        );
+        
+        if (response.data && response.data.length > 0) {
+            return {
+                lat: parseFloat(response.data[0].lat),
+                lng: parseFloat(response.data[0].lon)
+            };
         }
-
-        //hash password and Register the from in data base
-
-        const hashPassword = bcrypt.hashSync(password)
-        const newRegistration = new User({
-            name, address, email, password: hashPassword
-        })
-        //save the new data
-        await newRegistration.save()
-
-        res.status(200).json({
-            status: true,
-            message: "Registartion Sucess"
-        })
-
+        return null;
     } catch (error) {
-        res.status(500).json({
-            status: false, error
-        })
+        console.error("Geocoding error:", error);
+        return null;
     }
-
 }
 
+export const Register = async (req, res) => {
+    try {
+        const { name, address, email, password } = req.body;
 
-//login
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({
+                status: false,
+                message: "User already registered"
+            });
+        }
+
+        // Geocode the Nepali address
+        const coordinates = await geocodeNepaliAddress(address);
+        
+        // Create user with address data
+        const newUser = new User({
+            name,
+            email,
+            password: bcrypt.hashSync(password),
+            address: {
+                text: address,  // Original Nepali address
+                coordinates: coordinates || undefined
+            }
+        });
+
+        await newUser.save();
+
+        // Return response without password
+        const userData = newUser.toObject();
+        delete userData.password;
+
+        res.status(201).json({
+            status: true,
+            message: "Registration successful",
+            data: userData
+        });
+
+    } catch (error) {
+        console.error("Registration error:", error);
+        res.status(500).json({
+            status: false,
+            message: "Registration failed",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
+
+// Login remains exactly the same
 export const Login = async (req, res) => {
     try {
-        const {  email, password } = req.body
-
-        const user = await User.findOne({ email }).lean().exec()
+        const { email, password } = req.body;
+        const user = await User.findOne({ email }).lean().exec();
 
         if (!user) {
             return res.status(403).json({
                 status: false,
-                message: "Invalid Login Credntials"
-            })}
+                message: "Invalid login credentials"
+            });
+        }
             
-            //check Password 
-            const isVerifyPassword = await bcrypt.compare(password,user.password)
-            if(!isVerifyPassword){
-                return res.status(403).json({
+        // Check password 
+        const isVerifyPassword = await bcrypt.compare(password, user.password);
+        if (!isVerifyPassword) {
+            return res.status(403).json({
                 status: false,
-                message: "Invalid Login Credntials"
-            })
-            }
+                message: "Invalid login credentials"
+            });
+        }
 
-            delete user.password
+        delete user.password;
 
-            //create the token for pass password
-            const token = await jwt.sign(user, process.env.JWT_SECRET)
+        // Create token
+        const token = jwt.sign(user, process.env.JWT_SECRET);
 
-            res.cookie('access_token', token, {
-                httpOnly: true
-            
-            })
-            res.status(200).json({
-                status: true,
-                message: "Login Sucess"
-            })
+        res.cookie('access_token', token, {
+            httpOnly: true
+        });
         
+        res.status(200).json({
+            status: true,
+            message: "Login success"
+        });
 
     } catch (error) {
         res.status(500).json({
-            status: false, error
-        })
+            status: false, 
+            error: error.message
+        });
     }
-
-}
+};

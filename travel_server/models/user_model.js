@@ -5,10 +5,20 @@ const userSchema = new mongoose.Schema({
         type:String,
         required: true,
     },
-     address:{
-        type:String,
-        required: true,
+    // ... other fields ...
+ address: {
+    text: String,
+    components: { // Optional but recommended
+      ward: String,
+      local_level: String,
+      district: String,
+      province: String
     },
+    coordinates: {
+      lat: Number,
+      lng: Number
+    }
+  },
      email:{
         type:String,
         required: true,

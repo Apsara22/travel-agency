@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Login from "../Components/Login"
+import { useNavigate } from 'react-router-dom';
+import Login from './Login';
 import Logo from "../assets/GlobeWay.png";
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -7,6 +8,8 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+
+
 
 // Fix Leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -44,7 +47,7 @@ const isTravelRelated = (company) => {
 };
 
 export const Navbar = () => {
-
+  const navigate = useNavigate();
   const centerPosition = [27.7172, 85.3240]; // Center of Kathmandu
   const [searchQuery, setSearchQuery] = useState('');
   const [travelCompanies, setTravelCompanies] = useState([]);
@@ -177,7 +180,11 @@ export const Navbar = () => {
   };
 
   const handleLogout = () => {
-    <Login />
+    // Clear any user session or token here if needed
+    // For example: localStorage.removeItem('authToken');
+    
+    // Redirect to login page
+    navigate('/login');
   };
 
   return (

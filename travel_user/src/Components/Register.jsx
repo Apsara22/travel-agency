@@ -2,9 +2,11 @@ import React from 'react'
 import logo from "../assets/GlobeWay.png"
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
 const Register = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -61,9 +63,14 @@ const Register = () => {
     return valid;
   };
 
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validate()) {
       return; // Don't submit if validation fails
     }
@@ -71,7 +78,7 @@ const Register = () => {
     try {
       // Remove conpassword before sending to server
       const { conpassword, ...dataToSend } = formData;
-      
+
       const response = await fetch(`${baseUrl}/api/auth/register`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
@@ -79,11 +86,13 @@ const Register = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.status) {
         setRegistrationSuccess(true);
-        setTimeout(() => navigate('/'), 5000); // Use navigate instead of window.location
-      } else {
+        setTimeout(() => navigate('/login'), 5000); // Use navigate instead of window.location
+      }
+
+      else {
         // Handle server-side errors
         console.error('Registration failed:', data.message);
       }
@@ -106,52 +115,53 @@ const Register = () => {
                 <img src={logo} alt="logo" className="logo" />
                 <h2>Register</h2>
               </div>
-              <div className="divider"></div>
+             
+            </div>
+ <div className="divider"></div>
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              {errors.name && <span className="error-message">{errors.name}</span>}
             </div>
 
             <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Enter Name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.name && <span className="error-message">{errors.name}</span>}
-              </div>
+              <label htmlFor="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="Enter Exact location"
+                value={formData.address}
+                onChange={handleChange}
+              />
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="address">Address</label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  placeholder="Enter Address"
-                  value={formData.address}
-                  onChange={handleChange}
-                />
-              </div>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <div className="password-input-container">
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Enter Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
                   placeholder="Enter Password (min 8 chars with special character)"
@@ -159,13 +169,18 @@ const Register = () => {
                   onChange={handleChange}
                   required
                 />
-                {errors.password && <span className="error-message">{errors.password}</span>}
+                <div className="password-toggle" onClick={togglePasswordVisibility}>
+                  {showPassword ? <IoIosEyeOff /> : <IoIosEye />}
+                </div>
               </div>
+              {errors.password && <span className="error-message">{errors.password}</span>}
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="conpassword">Confirm Password</label>
+            <div className="form-group">
+              <label htmlFor="conpassword">Confirm Password</label>
+              <div className="password-input-container">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="conpassword"
                   name="conpassword"
                   placeholder="Confirm Your Password"
@@ -173,8 +188,12 @@ const Register = () => {
                   onChange={handleChange}
                   required
                 />
-                {errors.conpassword && <span className="error-message">{errors.conpassword}</span>}
+                <div className="password-toggle" onClick={togglePasswordVisibility}>
+                  {showPassword ? <IoIosEyeOff /> : <IoIosEye />}
+                </div>
               </div>
+              {errors.conpassword && <span className="error-message">{errors.conpassword}</span>}
+            </div>
 
 
             <button type="submit" className="submit-btn">
@@ -183,7 +202,7 @@ const Register = () => {
             <div>
               <p>Already Have Account? <Link to="/login">Login</Link></p>
             </div>
-            
+
             {registrationSuccess && (
               <div className="success-message">
                 Registration is successful! Redirecting to home in 5 seconds...

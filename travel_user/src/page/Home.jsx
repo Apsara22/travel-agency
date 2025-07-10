@@ -1,24 +1,22 @@
-import { Button } from 'bootstrap'
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Googlemap from '../page/Googlemap'
 
-import { Navbar } from './Navbar'
+import Login from '../Components/Login'
+
+
 
 
 const Home = () => {
   return (
     <div>
-   
-       
-<Navbar/>
 
-      
-        
-      <br/>
-    
-       
-      
+
+      < Login />
+
+
+
+      <br />
+
+
+
     </div>
   )
 }
