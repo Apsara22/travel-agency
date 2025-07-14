@@ -160,16 +160,56 @@ form-header {
   margin-top: 5px;
   display: block;
 }
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+.popup-message {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.popup-message p {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.popup-message button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.popup-message button:hover {
+  background-color: #45a049;
+}
 /* Add this to make input borders red when there's an error */
 .form-group input:invalid {
   border-color: #ff4444;
 }
 
-
+/*****************************************/
 /* Login css */
 
-/* LoginForm.css */
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -330,22 +370,60 @@ form-header {
 .login-form a:hover {
   text-decoration: underline;
 }
-
+/************************************************/
 /* Sidebar and Main Content Layout */
-.sidebar-container {
+.app-container {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   width: 100%;
 }
 
-.sidebar-nav {
-  width: 25%;
+/* Mobile Header */
+.mobile-header {
+  display: none;
+  padding: 10px 15px;
   background-color: white;
-  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  z-index: 1000;
+}
+
+.mobile-menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #800080;
+}
+
+.mobile-logo {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.mobile-logo .logo {
+  height: 30px;
+}
+
+/* Sidebar */
+.sidebar-container {
+  width: 300px;
+  background-color: white;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 900;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.sidebar-nav {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  
+  height: 100%;
 }
 
 .logo-container {
@@ -354,29 +432,17 @@ form-header {
 }
 
 .logo {
-  max-width: 100%;
+  max-width: 80%;
   height: auto;
 }
 
-.logout-container {
-  
-}
-
-.logout-container form {
+/* Search */
+.search-container {
   position: relative;
   margin-bottom: 20px;
 }
 
-.logout-container input {
-  width: 100%;
-  padding: 10px 15px 10px 35px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  outline: none;
-}
-
-.logout-container .bi-search {
+.search-icon {
   position: absolute;
   left: 10px;
   top: 50%;
@@ -384,125 +450,20 @@ form-header {
   color: #800080;
 }
 
-.logout-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #800080;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-  background-color: #6a006a;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.main-content {
-  width: 75%;
-  background-color: #00c4cc;
-  padding: 20px;
-}
-
-/* Google Map Styling */
-.main-content .google-map-container {
-  margin: 20px 0;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: calc(100vh - 40px);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .sidebar-container {
-    flex-direction: column;
-  }
-  
-  .sidebar-nav {
-    width: 100%;
-    padding: 15px;
-  flex-direction: row;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .logo-container {
-    margin-bottom: 0;
-    width: 60px;
-  }
-  
-  .logout-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 0;
-  }
-  
-  .logout-container form {
-    margin-bottom: 0;
-    width: 150px;
-  }
-  
-  .logout-btn {
-    width: auto;
-    padding: 8px 15px;
-  }
-  
-  .main-content {
-    width: 100%;
-    padding: 15px;
-  }
-  
-  .main-content .google-map-container {
-    height: 400px;
-    margin: 10px 0;
-  border-radius: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .sidebar-nav {
-    flex-direction: column;
-  }
-  
-  .logo-container {
-    width: 100%;
-    margin-bottom: 15px;
-  }
-  
-  .logout-container {
-    width: 100%;
-    flex-direction: column;
-  }
-  
-  .logout-container form {
-    width: 100%;
-  }
-  
-  .logout-btn {
-    width: 100%;
-  }
-}
-
-/* Search input */
 .search-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 10px 15px 10px 35px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 14px;
+  outline: none;
 }
 
-/* Companies list */
+/* Companies List */
 .companies-list {
+  flex-grow: 1;
+  overflow-y: auto;
   margin: 20px 0;
-  padding: 0 10px;
 }
 
 .companies-list h3 {
@@ -513,56 +474,15 @@ form-header {
 
 .companies-list ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
 .company-item {
-  margin-bottom: 15px;
-  padding: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
   background-color: #f9f9f9;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-.company-item:hover {
-  background-color: #f0f0f0;
-}
-
-.company-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.company-name {
-  font-weight: 600;
-  margin-bottom: 5px;
-  color: #222;
-}
-
-/* Star rating */
-.star-rating {
-  color: #ccc;
-  font-size: 16px;
-}
-
-.star-rating .star.filled {
-  color: #ffc107; /* Yellow color for filled stars */
-}
-
-/* Popup stars */
-.leaflet-popup-content .star-rating {
-  margin-top: 5px;
-}
-
-/* google maps */
-
-/* path css */
-.company-item {
+  border-radius: 6px;
   cursor: pointer;
-  padding: 8px;
-  margin: 4px 0;
-  border-radius: 4px;
+  transition: all 0.2s;
 }
 
 .company-item:hover {
@@ -574,10 +494,134 @@ form-header {
   border-left: 3px solid #4a6bdf;
 }
 
-/* Style for the route line */
-.leaflet-interactive {
-  stroke-linejoin: round;
-  stroke-linecap: round;
+.company-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.company-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #222;
+  font-size: 14px;
+}
+
+/* Star Rating */
+.star-rating {
+  color: #ccc;
+  font-size: 14px;
+}
+
+.star-rating .star.filled {
+  color: #ffc107;
+}
+
+/* Logout */
+.logout-container {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #800080;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #6a006a;
+}
+
+/* Main Content */
+.main-content {
+  flex-grow: 1;
+  margin-left: 300px;
+  height: 100vh;
+}
+
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* Map Elements */
+.leaflet-popup-content {
+  min-width: 200px;
+}
+
+.leaflet-popup-content .star-rating {
+  margin-top: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .sidebar-container {
+    width: 280px;
+  }
+  
+  .main-content {
+    margin-left: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-header {
+    display: flex;
+  }
+  
+  .sidebar-container {
+    transform: translateX(-100%);
+    width: 280px;
+  }
+  
+  .sidebar-container.mobile-menu-open {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .logo-container {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-container {
+    width: 100%;
+  }
+  
+  .company-item {
+    padding: 10px;
+  }
+  
+  .logout-btn {
+    padding: 10px;
+  }
+}
+
+.distance-info {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.company-item.selected .distance-info {
+  color: #4a6bdf;
+  font-weight: 500;
+}
+
+.distance-info-popup {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #444;
 }
 
 /* login sucessfull or error message */
