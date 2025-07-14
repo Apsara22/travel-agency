@@ -79,7 +79,7 @@ const Register = () => {
       // Remove conpassword before sending to server
       const { conpassword, ...dataToSend } = formData;
 
-      const response = await fetch(`${baseUrl}/api/auth/register`, {
+      const response = await fetch(`${baseUrl}/register`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend) // Send formData without conpassword
@@ -215,4 +215,8 @@ const Register = () => {
   );
 }
 
+<<<<<<< HEAD
 export default Register;                                                                                                                             
+=======
+export default Register;
+>>>>>>> a2e8ae1585e266b809e0ac966d0beede84b10f83
