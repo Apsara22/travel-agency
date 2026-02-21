@@ -68,9 +68,9 @@ const Register = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!validate()) {
       return; // Don't submit if validation fails
     }
@@ -78,21 +78,19 @@ const Register = () => {
     try {
       // Remove conpassword before sending to server
       const { conpassword, ...dataToSend } = formData;
-
-      const response = await fetch(`${baseUrl}/register`, {
+      
+      const response = await fetch(`${baseUrl}/api/auth/register`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend) // Send formData without conpassword
       });
 
       const data = await response.json();
-
+      
       if (data.status) {
         setRegistrationSuccess(true);
-        setTimeout(() => navigate('/login'), 5000); // Use navigate instead of window.location
-      }
-
-      else {
+        setTimeout(() => navigate('/'), 5000); // Use navigate instead of window.location
+      } else {
         // Handle server-side errors
         console.error('Registration failed:', data.message);
       }
@@ -215,8 +213,6 @@ const Register = () => {
   );
 }
 
-<<<<<<< HEAD
-export default Register;                                                                                                                             
-=======
+
 export default Register;
->>>>>>> a2e8ae1585e266b809e0ac966d0beede84b10f83
+

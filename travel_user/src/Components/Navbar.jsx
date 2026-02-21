@@ -72,23 +72,23 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mapRef = useRef();
 
-  const getaddress = async () => {
-  try {
-    const apiUrl = `${baseUrl}/api/auth/register`;
-    const response = await fetch(apiUrl);
+//   const getaddress = async () => {
+//   try {
+//     const apiUrl = `${baseUrl}/api/auth/register`;
+//     const response = await fetch(apiUrl);
     
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
     
-    const data = await response.json();
-    console.log('API response:', data);
-    return data;
-  } catch (error) {
-    console.error('Error fetching address:', error);
-    throw error;
-  }
-}
+//     const data = await response.json();
+//     console.log('API response:', data);
+//     return data;
+//   } catch (error) {
+//     console.error('Error fetching address:', error);
+//     throw error;
+//   }
+// }
 
 // Usage in useEffect:
 useEffect(() => {
