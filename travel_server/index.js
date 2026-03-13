@@ -15,10 +15,10 @@ app.use(cors({
     credentials:true
 }))
 
-const port =process.env.PORT
-app.listen(port, ()=>{
-    console.log('Our Server is Running',port)
-})
+// const port =process.env.PORT
+// app.listen(port, ()=>{
+//     console.log('Our Server is Running',port)
+// })
 
 //database Connection
 mongoose.connect(process.env.MONGO_DB).then(()=>{
